@@ -1,7 +1,10 @@
 // Esse tipo de comentário que estão antes de todas as funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições! 
 
+// const { fetchProducts } = require('./helpers/fetchProducts');
+
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
+const SEARCH_TERM = 'computador';
 
 /**
  * Função responsável por criar e retornar o elemento de imagem do produto.
@@ -72,4 +75,16 @@ const createCartItemElement = ({ id, title, price }) => {
   return li;
 };
 
-window.onload = () => { };
+const handleSearchProducts = async () => {
+  const itemsSection = document.querySelector('.items');
+  const productsArray = await fetchProducts(SEARCH_TERM);
+
+  productsArray.forEach((obj) => {
+    const item = createProductItemElement(obj);
+    itemsSection.appendChild(item);
+  });
+};
+
+window.onload = () => {
+  handleSearchProducts();
+};

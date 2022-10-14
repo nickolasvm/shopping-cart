@@ -1,8 +1,26 @@
-// endpoint https://api.mercadolibre.com/sites/MLB/search?q=$QUERY
 // $QUERY = termo de pesquisa, precisa ser 'computador'
+const BASE_URL = 'https://api.mercadolibre.com/sites/MLB';
+const SEARCH_ENDPOINT = '/search';
 
-const fetchProducts = () => {
-  // seu código aqui
+const buildSearchTermUrl = (searchTerm) =>
+  `${BASE_URL}${SEARCH_ENDPOINT}?q=${searchTerm}`;
+
+const fetchProducts = async (searchTerm) => {
+  const urlToFecth = buildSearchTermUrl(searchTerm);
+
+  try {
+    const response = await fetch(urlToFecth);
+    const json = await response.json();
+    const searchedProducts = json.results;
+
+    const results = searchedProducts.reduce((arr, { price, title, thumbnail, id }) =>
+      [...arr, { price, title, thumbnail, id }], []);
+
+    return results;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 if (typeof module !== 'undefined') {
