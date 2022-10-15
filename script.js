@@ -4,8 +4,15 @@
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 const SEARCH_TERM = 'computador';
 
-const excludeItemCart = () => {
-  
+const excludeItemCart = (event) => {
+  const { target } = event;
+  const { className } = target;
+
+  if (className === 'item__image') {
+    target.parentElement.remove();
+  } else {
+    target.remove();
+  }
 };
 
 /**
@@ -46,7 +53,8 @@ const createCartItemElement = ({ id, title, price, thumbnail }) => {
   li.innerHTML = `ID: ${id} <br> TITLE: ${title} <br> PRICE: $${price} <br>`;
 
   li.appendChild(createProductImageElement(thumbnail));
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => excludeItemCart(event));
+
   return li;
 };
 
