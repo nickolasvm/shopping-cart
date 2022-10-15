@@ -4,6 +4,10 @@
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 const SEARCH_TERM = 'computador';
 
+const excludeItemCart = () => {
+  
+};
+
 /**
  * Função que recupera o ID do produto passado como parâmetro.
  * @param {Element} product - Elemento do produto.
@@ -14,21 +18,6 @@ const getIdFromProductItem = (product) => {
   const id = pathProductId.innerText;
   
   return id;
-};
-/**
- * Função responsável por criar e retornar um item do carrinho.
- * @param {Object} product - Objeto do produto.
- * @param {string} product.id - ID do produto.
- * @param {string} product.title - Título do produto.
- * @param {string} product.price - Preço do produto.
- * @returns {Element} Elemento de um item do carrinho.
- */
-const createCartItemElement = ({ id, title, price }) => {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
-  // li.addEventListener('click', cartItemClickListener);
-  return li;
 };
 
 /**
@@ -43,6 +32,24 @@ const createProductImageElement = (imageSource) => {
   return img;
 };
 
+/**
+ * Função responsável por criar e retornar um item do carrinho.
+ * @param {Object} product - Objeto do produto.
+ * @param {string} product.id - ID do produto.
+ * @param {string} product.title - Título do produto.
+ * @param {string} product.price - Preço do produto.
+ * @returns {Element} Elemento de um item do carrinho.
+ */
+const createCartItemElement = ({ id, title, price, thumbnail }) => {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerHTML = `ID: ${id} <br> TITLE: ${title} <br> PRICE: $${price} <br>`;
+
+  li.appendChild(createProductImageElement(thumbnail));
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+};
+
 const addToCart = async (event) => {
   const productId = getIdFromProductItem(event);
   const product = await fetchItem(productId);
@@ -50,7 +57,6 @@ const addToCart = async (event) => {
   const cartList = document.querySelector('.cart__items');
 
   cartList.appendChild(createCartItemElement(product));
-  cartList.appendChild(createProductImageElement(product.thumbnail));
 };
 
 /**
