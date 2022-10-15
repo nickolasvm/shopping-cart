@@ -1,9 +1,8 @@
-// $QUERY = termo de pesquisa, precisa ser 'computador'
-const BASE_URL = 'https://api.mercadolibre.com/sites/MLB';
+const BASE_SEARCH_URL = 'https://api.mercadolibre.com/sites/MLB';
 const SEARCH_ENDPOINT = '/search';
 
 const buildSearchTermUrl = (searchTerm) =>
-  `${BASE_URL}${SEARCH_ENDPOINT}?q=${searchTerm}`;
+  `${BASE_SEARCH_URL}${SEARCH_ENDPOINT}?q=${searchTerm}`;
 
 const fetchProducts = async (searchTerm) => {
   const urlToFecth = buildSearchTermUrl(searchTerm);
