@@ -3,16 +3,20 @@
 
 // Fique a vontade para modificar o código já escrito e criar suas próprias funções!
 const SEARCH_TERM = 'computador';
+const CART_ITEMS = '.cart__items';
 
 const excludeItemCart = (event) => {
   const { target } = event;
-  const { className } = target;
+  const actualClass = target.className;
 
-  if (className === 'item__image') {
+  if (actualClass === 'item__image') {
     target.parentElement.remove();
   } else {
     target.remove();
   }
+
+  const cartList = document.querySelector(CART_ITEMS);
+  saveCartItems(cartList);
 };
 
 /**
@@ -50,21 +54,33 @@ const createProductImageElement = (imageSource) => {
 const createCartItemElement = ({ id, title, price, thumbnail }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.innerHTML = `ID: ${id} <br> TITLE: ${title} <br> PRICE: $${price} <br>`;
+  li.innerHTML = `ID: ${id} | TITLE: ${title} | PRICE: $${price}`;
 
   li.appendChild(createProductImageElement(thumbnail));
-  li.addEventListener('click', (event) => excludeItemCart(event));
+  li.addEventListener('click', (event) =>
+    excludeItemCart(event));
 
   return li;
 };
 
-const addToCart = async (event) => {
+const addItemToCart = async (event) => {
   const productId = getIdFromProductItem(event);
   const product = await fetchItem(productId);
-
-  const cartList = document.querySelector('.cart__items');
+  const cartList = document.querySelector(CART_ITEMS);
 
   cartList.appendChild(createCartItemElement(product));
+
+  saveCartItems(cartList);
+};
+
+const addLocalStorageCartItems = () => {
+  const cartList = document.querySelector(CART_ITEMS);
+  const cartItems = getSavedCartItems();
+  cartList.innerHTML = cartItems;
+  
+  const cartArray = Array.from(cartList.children);
+  cartArray.forEach((item) =>
+    item.addEventListener('click', excludeItemCart));
 };
 
 /**
@@ -81,9 +97,8 @@ const createCustomElement = (element, className, innerText) => {
   e.innerText = innerText;
 
   if (element === 'button') {
-    e.addEventListener('click', (event) => {
-      addToCart(event);
-    });
+    e.addEventListener('click', (event) =>
+      addItemToCart(event));
   }
   return e;
 };
@@ -119,6 +134,6 @@ const handleSearchProducts = async (searchTerm) => {
 };
 
 window.onload = () => {
+  addLocalStorageCartItems();
   handleSearchProducts(SEARCH_TERM);
-  // console.log(getIdFromProductItem(document));
 };

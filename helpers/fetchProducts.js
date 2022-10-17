@@ -25,5 +25,6 @@ const fetchProducts = async (searchTerm) => {
 if (typeof module !== 'undefined') {
   module.exports = {
     fetchProducts,
+    buildSearchTermUrl,
   };
 }
