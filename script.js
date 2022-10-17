@@ -5,6 +5,19 @@
 const SEARCH_TERM = 'computador';
 const CART_ITEMS = '.cart__items';
 
+const displayLoading = (sectionToLoad) => {
+  const loading = document.createElement('span');
+  loading.className = 'loading';
+  loading.innerText = 'carregando...';
+
+  sectionToLoad.appendChild(loading);
+};
+
+const hideLoading = () => {
+  const loading = document.querySelector('.loading');
+  loading.remove();
+};
+
 const excludeItemCart = (event) => {
   const { target } = event;
   const actualClass = target.className;
@@ -125,7 +138,9 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
 
 const handleSearchProducts = async (searchTerm) => {
   const itemsSection = document.querySelector('.items');
+  displayLoading(itemsSection);
   const productsArray = await fetchProducts(searchTerm);
+  hideLoading();
 
   productsArray.forEach((obj) => {
     const item = createProductItemElement(obj);
