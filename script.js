@@ -44,7 +44,8 @@ const excludeItemCart = (event) => {
 
   const cartList = document.querySelector(CART_ITEMS);
   sumCartItemsValues(cartList);
-  saveCartItems(cartList);
+  localStorage.clear();
+  saveCartItems(cartList.innerHTML);
 };
 
 const cleanCart = () => {
@@ -101,20 +102,25 @@ const createCartItemElement = ({ id, title, price, thumbnail }) => {
   return li;
 };
 
+const handleFetchItem = ({ title, thumbnail, price, id }) =>
+ ({ title, thumbnail, price, id });
+
 const addItemToCart = async (event) => {
   const productId = getIdFromProductItem(event);
-  const product = await fetchItem(productId);
-  const cartList = document.querySelector(CART_ITEMS);
+  const productJson = await fetchItem(productId);
+  const product = handleFetchItem(productJson);
 
+  const cartList = document.querySelector(CART_ITEMS);
   cartList.appendChild(createCartItemElement(product));
 
   sumCartItemsValues(cartList);
-  saveCartItems(cartList);
+  localStorage.clear();
+  saveCartItems(cartList.innerHTML);
 };
 
 const addLocalStorageCartItems = () => {
   const cartList = document.querySelector(CART_ITEMS);
-  const cartItems = getSavedCartItems();
+  const cartItems = JSON.parse(getSavedCartItems());
   cartList.innerHTML = cartItems;
   
   const cartArray = Array.from(cartList.children);
@@ -162,10 +168,22 @@ const createProductItemElement = ({ id, title, thumbnail }) => {
   return section;
 };
 
+const handleFetchProducts = (jsonObj) => {
+  const searchedProducts = jsonObj.results;
+
+  const results = searchedProducts.reduce((arr, { price, title, thumbnail, id }) =>
+    [...arr, { price, title, thumbnail, id }], []);
+  
+  return results;
+};
+
 const handleSearchProducts = async (searchTerm) => {
   const itemsSection = document.querySelector('.items');
   displayLoading(itemsSection);
-  const productsArray = await fetchProducts(searchTerm);
+
+  const jsonObj = await fetchProducts(searchTerm);
+  const productsArray = handleFetchProducts(jsonObj);
+
   hideLoading();
 
   productsArray.forEach((obj) => {

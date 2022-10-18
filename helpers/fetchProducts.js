@@ -10,15 +10,10 @@ const fetchProducts = async (searchTerm) => {
   try {
     const response = await fetch(urlToFecth);
     const json = await response.json();
-    const searchedProducts = json.results;
 
-    const results = searchedProducts.reduce((arr, { price, title, thumbnail, id }) =>
-      [...arr, { price, title, thumbnail, id }], []);
-
-    return results;
+    return json;
   } catch (error) {
-    console.error(error);
-    throw error;
+    throw new Error('You must provide an url');
   }
 };
 

@@ -1,37 +1,36 @@
 require('../mocks/fetchSimulator');
-const { fetchProducts, buildSearchTermUrl } = require('../helpers/fetchProducts');
+const { fetchProducts } = require('../helpers/fetchProducts');
 const computadorSearch = require('../mocks/search');
 
 describe('1 - Teste a função fetchProducts', () => {
-  // implemente seus testes aqui
-  // fail('Teste vazio');
-
   test('se é uma função', () => {
     expect(typeof fetchProducts).toBe('function');
   })
 
-  test('se argumento for "computador", fetch é chamado', async () => {
-    await fetchSimulator('computador');
-    expect(fetch).toHaveBeenCalledTimes(1);
-    // jest.mock('fetchSimulator');
+  test('Execute a função com o argumento "computador" e teste se fetch foi chamada', async () => {
+    await fetchProducts('computador');
+    expect(fetch).toHaveBeenCalled();
   })
 
-  test('se argumento for "computador", fetch utiliza o endpoint citado', () => {
-    const actual = buildSearchTermUrl('computador');
-    const expected = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  test('se, ao chamar a função com o argumento "computador", a função fetch utiliza o endpoint especificado', async () => {
+    const expectedUrl = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+    await fetchProducts('computador');
   
-    expect(actual).toBe(expected);
+    expect(fetch).toBeCalledWith(expectedUrl);
   })
 
-  test('se argumento for "computador", retorna objeto igual à "computadorSearch"', async () => {
-    // const actual = await fetchProducts('computador');
-    // const expected = computadorSearch;
+  test('se o retorno da função com o argumento "computador" é uma estrutura de dados igual ao objeto computadorSearch, que já está importado no arquivo.', async () => {
+    // TODO computadorSearch não esta igual ao retorno da função pois a msm foi tratada
+    const actual = await fetchProducts('computador');
 
-    // expect(actual).toBe(expected.results);
+    expect(actual).toEqual(computadorSearch);
   })
 
-  test('se não houver argumentos, dispara erro com mensagem específica', () => {
-    // 'You must provide an url'
-    // new Error('mensagem esperada aqui')
+  test('se, ao chamar a função sem argumento, retorna um erro com a mensagem: "You must provide an url"', async () => {
+    try {
+      await fetchProducts();
+    } catch (error) {
+      expect(error.message).toBe('You must provide an url');
+    }
   })
 });

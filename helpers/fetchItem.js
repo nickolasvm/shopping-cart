@@ -9,12 +9,10 @@ const fetchItem = async (id) => {
   try {
     const response = await fetch(urlToFecth);
     const json = await response.json();
-    const { title, thumbnail, price } = json;
 
-    return { title, thumbnail, price, id };
+    return json;
   } catch (error) {
-    console.error(error);
-    throw error;
+    throw new Error('You must provide an url');
   }
 };
 
