@@ -19,22 +19,16 @@ const hideLoading = () => {
 };
 
 const sumCartItemsValues = (cartList) => {
-  // criar elemento html que renderiza o valor
   const domElement = document.querySelector('.total-price');
-
-  // const realBR = Intl.NumberFormat('pt-BR', {
-  //   style: 'currency',
-  //   currency: 'BRL',
-  // });
 
   const listArray = [...cartList.children];
   let sum = 0;
 
   listArray.forEach((item) => {
     const price = Number(item.innerText.split('$')[1]);
-    
     sum += price;
   });
+
   domElement.innerHTML = sum;
 };
 
@@ -51,6 +45,16 @@ const excludeItemCart = (event) => {
   const cartList = document.querySelector(CART_ITEMS);
   sumCartItemsValues(cartList);
   saveCartItems(cartList);
+};
+
+const cleanCart = () => {
+  const cartList = document.querySelector('.cart__items');
+  const Items = cartList.children;
+
+  const listArray = [...Items];
+  listArray.forEach((item) =>
+    item.remove());
+  sumCartItemsValues(cartList);
 };
 
 /**
@@ -170,13 +174,13 @@ const handleSearchProducts = async (searchTerm) => {
   });
 };
 
-window.onload = () => {
-  addLocalStorageCartItems();
-  handleSearchProducts(SEARCH_TERM);
+const setHtmlElements = () => {
+  const cleanCartButton = document.querySelector('.empty-cart');
+  cleanCartButton.addEventListener('click', cleanCart);
 };
 
-// total-price
-// criar elemento html que renderiza o valor
-// usar logica para pegar o vaor dos elementos na lista, somá-los e renderiza-los no elemento previamente criado
-// certificar de que a soma venha apenas após a reuqisição API estiver concluida
-// "não utilizar toFixed() para arredondar valores"
+window.onload = () => {
+  addLocalStorageCartItems();
+  setHtmlElements();
+  handleSearchProducts(SEARCH_TERM);
+};
